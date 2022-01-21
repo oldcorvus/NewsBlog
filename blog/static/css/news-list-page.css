@@ -1,0 +1,21 @@
+@media screen and (max-width: 1200px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .main-news {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    aside {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .news-page-container {
+        width: 100%;
+        margin-bottom: 40px;
+    }
+}

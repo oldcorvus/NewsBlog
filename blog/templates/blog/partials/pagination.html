@@ -1,0 +1,26 @@
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{{ request.get_full_path }}&page=1">&laquo; اولین</a>
+            <a href="{{ request.get_full_path }}&page={{ page_obj.previous_page_number }}">قبلی</a>
+        {% endif %}
+
+        <span class="current">
+            صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if 'filter' in request.GET or 'start_date' in request.GET or 'page_comments' in request.GET  or 'finish_date' in request.GET  or 'page_popular' in request.GET  or 'page_view' in request.GET or 'q' in request.GET %}
+
+            {% if page_obj.has_next %}
+                <a href="{{ request.get_full_path }}&page={{ page_obj.next_page_number }}">بعدی</a>
+                <a href="{{ request.get_full_path }}&page={{ page_obj.paginator.num_pages }}">اخرین &raquo;</a>
+            {% endif %}
+        {% else %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">اخرین &raquo;</a>
+            {% endif %}
+        {% endif %}            
+        
+    </span>
+</div>

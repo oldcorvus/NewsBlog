@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}لیست اخبار{% endblock title %}
+{% block head %}
+    <div class="container">
+        <div class="nav-container">
+            <script type="text/javascript" src="/admin/jsi18n/"></script>
+            <script type="text/javascript" src="/static/admin/js/core.js"></script>      
+                <form action="{% url 'blog:news-list' %}" method="GET">
+                    {{form.media}}
+
+                    {{form.as_p}}
+                    <button type="submit" class="btn btn-outline-warning">فیلتر</button>
+
+
+                  </form>
+            </div>
+{% endblock head %}
+{% block content %}
+            <section class="main-news">
+                <h1 class="main-header">لیست اخبار</h1>
+                {% for news in object_list%}
+                <article class="news">
+                    <figure class="news-image">
+                        <a href="news-page.html"><img src="{{news.cover.url}}" alt="image 1" title="عنوان خبر ۱"></a>
+                    </figure>
+                    <div class="news-text-container">
+                        <div class="news-header">
+                            <a href="{{news.get_absolute_url}}"><h3 class="news-header-text">{{news.title}}</h3></a>
+                            <a href="#" class="tag">{{news.category.title}}</a>
+                        </div>
+                        <a href="news-page.html"><p class="news-text">
+                            {{news.content|safe|striptags|truncatewords:5}}
+
+                        </p></a>
+                    </div>
+                </article>
+                {% endfor %}
+                {% include 'blog/partials/pagination.html' %}
+
+            </section>
+
+            {% endblock content %}
+            {% block aside %}
+            <article class="news">
+                <div class="news-text-container">
+                    <div class="news-header">
+                        <h3 class="news-header-text"> پربازديد ترين ها بر اساس کامنت ها</h3>
+                    </div>
+                    
+                </div>
+            </article>
+            {% for news in news_popular_comments %}
+            <section class="side-image">
+                <figure>
+                    <img src="{{news.cover.url}}" alt="side image">
+                    <figcaption> <a href="{{news.get_absolute_url}}">   {{news.content|safe|striptags|truncatewords:5}}</a></figcaption>
+                </figure>
+            </section>
+            {% endfor %}
+            {% include 'blog/partials/pagination-comments.html' %}
+
+            {% endblock aside %}
+            <script type="text/javascript" src="{% static 'admin/jsi18n/' %}"></script>
+            <script type="text/javascript" src="{% static 'admin/jsi18n/' %}"></script>   

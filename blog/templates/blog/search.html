@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}جستجو{% endblock title %}
+
+{% block content %}
+            <section class="main-news">
+                <h1 class="main-header">نتايج</h1>
+                {% for news in object_list%}
+                <article class="news">
+                    <figure class="news-image">
+                        <a href="news-page.html"><img src="{{news.cover.url}}" alt="image 1" title="عنوان خبر ۱"></a>
+                    </figure>
+                    <div class="news-text-container">
+                        <div class="news-header">
+                            <a href="news-page.html"><h3 class="news-header-text">{{news.title}}</h3></a>
+                            <a href="#" class="tag">{{news.category.title}}</a>
+                        </div>
+                        <a href="news-page.html"><p class="news-text">
+                            {{news.content|safe|striptags|truncatewords:5}}
+
+                        </p></a>
+                    </div>
+                </article>
+                {% empty %}
+                <p>نتيجه اي براي اين جستجو يافت نشد</p>
+                {% endfor %}
+                
+                {% include 'blog/partials/pagination.html' %}
+
+            </section>
+
+            {% endblock content %}

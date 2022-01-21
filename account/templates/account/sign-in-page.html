@@ -1,0 +1,16 @@
+{% extends 'account/base.html' %}
+{% block title %}ثبت نام{% endblock title %}
+{% block content %}
+<section class="login-container">
+    <h1 class="login-header">ثبت نام</h1>
+    <form action="{% url 'account:register' %}" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="ثبت نام">
+    </form>
+    <a class="login-footer" href="{% url 'account:login' %}">
+        <i class="bi bi-person-fill"></i>
+        <p>ورود به حساب کاربری</p>
+    </a>
+</section>
+{% endblock content %}

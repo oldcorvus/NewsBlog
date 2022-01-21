@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+
+{% block title %}خبر{% endblock title %}
+{% block content %}
+            <section class="news-page-container">
+                <div class="news-page-header">
+                    <div class="news-page-header-text-container">
+                        <h1 class="news-page-title">{{object.title}}</h1>
+                        <p class="news-page-header-text">تاريخ انتشار:{{object.publish }}</p>
+                        <p class="news-page-header-text"><a href="{% url 'account:profile' object.author.username %}" >
+                          نويسنده:{{object.author }}</a></p>
+                          <p class="news-page-header-text">
+                            تعداد بازديد:{{object.views }}</p>
+                            <p class="news-page-header-text">
+                              دسته بندي:{{object.category.title}}</p>
+                    </div>
+                    <img class="news-page-image" src="{{object.cover.url}}" alt="image 1">
+                </div>
+                <p class="news-page-text">
+                  {{object.content|safe}}
+                </p>
+                <h1 class="news-page-title">نظرات</h1>
+                {% if request.user.is_authenticated %}
+                <form action="{% url 'comment:add-comment' object.id %}" method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    {{form.media}}
+                    <button type="submit" class="btn btn-success">ثبت</button>
+
+                  </form> 
+                  {% else %}
+                  <p>براي ارسال كامنت شما باید اول وارد حساب خود شوید </p>
+                {% endif %}
+                {% for comment in unapproved_comments %}
+                <div class="news-page-header-text-container">
+
+                  <p class="news-page-header-text">نویسنده:{{comment.author}}
+                    --  {{comment.body|safe|striptags}}
+                                    -- تاریخ{{comment.created}}
+                  </p>
+                  <a href="{% url 'comment:approve-comment' comment.id %}">تایید کامنت</a>
+                </div>
+                {% endfor %}
+                {% for comment in comments %}
+                <div class="news-page-header-text-container">
+
+                    <p class="news-page-header-text">نویسنده:{{comment.author}}
+                      --  {{comment.body|safe|striptags}}
+                                      -- تاریخ{{comment.created}}
+                    </p>
+                    {% if request.user.is_authenticated %}
+                    <form action="{% url 'comment:add-reply' object.id  comment.id %}" method="POST" >
+                        {{form.as_p}}
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning">ثبت</button>
+    
+                      </form>
+                      {% else %}
+                      <p> براي ارسال  ريپلاي اين كامنت شما باید اول وارد حساب خود شوید</p>
+                      {% endif %}                
+                          {% if comment.reply_comment %}
+                    {% for reply in comment.reply_comment.all  %}
+                    {% if reply.approve %}
+                    <div class="news-page-header-text-container" style="width:90%; margin-right:10%">
+                    <p class="news-page-header-text">ریپلای:<strong>{{comment.author}} </strong> -- {{reply.body|safe|striptags}}</p>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p>کامنتی برای این پست وجود ندارد.</p>
+                {% endfor %}
+            </section>
+{% endblock content  %}
+
+{% block aside %}
+{% if object.author == request.user %}
+
+<article class="news">
+  <div class="news-text-container">
+      <div class="news-header">
+          <h3 class="news-header-text">داشبورد</h3>
+      </div>
+      
+  </div>
+</article>
+
+<section class="side-image">
+  <figure>
+
+      <figcaption>  <!-- Button trigger modal -->
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          حذف خبر
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">حذف خبر</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                ايا از حدف اين خبر اطمينان داريد؟
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                <a href="{% url 'blog:delete-news' object.id %}" <button type="button" class="btn btn-primary">تایید</button></a>
+              </div>
+            </div>
+          </div>
+        </div></figcaption>
+      <figcaption><a href="{% url 'blog:edit-news' object.pk  %}"> ويرايش مقاله </a></figcaption>
+
+  </figure>
+</section>
+
+{% endif %}
+{% endblock aside %}

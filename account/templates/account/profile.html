@@ -1,0 +1,27 @@
+{% extends 'account/base.html' %}
+{% block title %}پروفايل{% endblock title %}
+{% block content %}
+<section class="login-container">
+    <h1 class="login-header"> پروفايل</h1>
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{{user.profile.avatar.url}}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{user.username}}</h5>
+          <p class="card-text">{{user.profile.description}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">تعدا اخبار منتشر شده كاربر:{{user.news.count}}</li>
+
+        </ul>
+        <div class="card-body">
+          <a href="{% url 'account:user-news' user.id %}" class="card-link">تمامي اخبار منتشر شده كاربر</a>
+         {% if self_profile %}
+          <a href="" class="card-link">ويرايش پروفايل</a>
+          <a href="{% url 'blog:add-news' %}" class="card-link">ثبت خبر جديد</a>
+
+          {% endif %}
+        </div>
+      </div>
+</section>
+{% endblock content %}
+

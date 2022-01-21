@@ -1,0 +1,157 @@
+<!doctype html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock title %}</title>
+
+   <!-- CSS only -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+   <link rel="icon" href="{% static 'images/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+<nav>
+    <div class="container">
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="{% static 'images/logo.png' %}" alt="logo" class="logo">
+                <p class="name">Moel</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="{% url 'blog:index' %}"> <i class="bi bi-house-fill"></i> خانه</a></li>
+                <li><a href="{% url 'blog:news-list' %}"> <i class="bi bi-list"></i> لیست اخبار</a></li>
+                <li>
+                    <label for="category-check">
+                        <i class="bi bi-caret-down-fill"></i> دسته بندی ها
+                    </label>
+                    <input type="checkbox" id="category-check" hidden>
+
+                    <ul class="categories-container">
+                        {% for category in categories %}
+                        <li><a href="{% url 'blog:news-list-category' category.slug %}"> <i class="bi bi-diamond-fill"></i>{{category.title}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+            <div class="nav-left">
+                <form action="{% url 'blog:search' %}" method="GET">
+                    <input name="q" type="text" id="search" placeholder="Search...">
+
+                  </form>
+
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'account:profile' request.user.username %}" class="login">{{request.user.username}}</a>
+                <a href="{% url 'account:logout' %}" class="login">خروج</a>
+
+                {% else %}
+                <a href="{% url 'account:login' %}" class="login">ورود</a>
+                <a href="{% url 'account:register' %}" class="sign-in">ثبت نام</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+{% include "messages.html" %}
+
+{% block head %}{% endblock head %}
+<main>
+    <div class="container">
+        <div class="main-container">
+{% block content %}{% endblock content %}
+<aside>
+    {% block aside %}{% endblock aside %}
+    <article class="news">
+        <div class="news-text-container">
+            <div class="news-header">
+                <h3 class="news-header-text">پربازديد ترين ها</h3>
+            </div>
+            
+        </div>
+    </article>
+    {% for news in popular_news %}
+    <section class="side-image">
+        <figure>
+            <img src="{{news.cover.url}}" alt="side image">
+            <figcaption><a href="{{news.get_absolute_url}}">{{news.title}}</a></figcaption>
+        </figure>
+    </section>
+    {% endfor %}
+    {% include 'blog/partials/pagination-view.html' %}
+
+    <section class="advertise">
+        <img src="{% static 'images/advertise.gif' %}" alt="advertise">
+        <img src="{% static 'images/advertise.gif' %}" alt="advertise">
+    </section>
+</aside>
+</div>
+</div>
+</main>
+<footer>
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-right">
+                <div class="logo-container">
+                    <img src="{% static 'images/logo.png' %}" alt="logo" class="logo">
+                    <p class="name">Moel</p>
+                </div>
+                <div class="brand-icons">
+                    <i class="bi bi-telegram"></i>
+                    <i class="bi bi-instagram"></i>
+                    <i class="bi bi-facebook"></i>
+                    <i class="bi bi-linkedin"></i>
+                </div>
+            </div>
+            <div class="footer-categories">
+                <h2 class="footer-categories-header">دسته بندی ها</h2>
+                <ul>
+                    {% for category in categories %}
+                    <li><a href="{{cateory.get_absolute_url}}">{{category.title}}</a></li>
+                    {% endfor %}
+        
+                </ul>
+            </div>
+            <div class="about-us">
+                <h2 class="about-us-header">درباره ما</h2>
+                <p class="about-us-text">مهنا رجبي شماره دانشجويي 993212030</p>
+            </div>
+        </div>
+    </div>
+     <!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <svg id="wave" style="transform:rotate(0deg); transition: 0.3s;position: absolute;bottom: 0;" viewBox="0 0 1440 220"
+         version="1.1"
+         xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="sw-gradient-0" x1="0" x2="0" y1="1" y2="0">
+                <stop stop-color="rgba(216, 211, 216, 1)" offset="0%"></stop>
+                <stop stop-color="rgba(216, 211, 216, 1)" offset="100%"></stop>
+            </linearGradient>
+        </defs>
+        <path style="transform:translate(0, 0px); opacity:1" fill="url(#sw-gradient-0)"
+              d="M0,88L40,106.3C80,125,160,161,240,150.3C320,139,400,81,480,58.7C560,37,640,51,720,77C800,103,880,139,960,139.3C1040,139,1120,103,1200,77C1280,51,1360,37,1440,36.7C1520,37,1600,51,1680,80.7C1760,110,1840,154,1920,146.7C2000,139,2080,81,2160,47.7C2240,15,2320,7,2400,29.3C2480,51,2560,103,2640,124.7C2720,147,2800,139,2880,139.3C2960,139,3040,147,3120,135.7C3200,125,3280,95,3360,69.7C3440,44,3520,22,3600,40.3C3680,59,3760,117,3840,143C3920,169,4000,161,4080,165C4160,169,4240,183,4320,176C4400,169,4480,139,4560,113.7C4640,88,4720,66,4800,47.7C4880,29,4960,15,5040,18.3C5120,22,5200,44,5280,77C5360,110,5440,154,5520,150.3C5600,147,5680,95,5720,69.7L5760,44L5760,220L5720,220C5680,220,5600,220,5520,220C5440,220,5360,220,5280,220C5200,220,5120,220,5040,220C4960,220,4880,220,4800,220C4720,220,4640,220,4560,220C4480,220,4400,220,4320,220C4240,220,4160,220,4080,220C4000,220,3920,220,3840,220C3760,220,3680,220,3600,220C3520,220,3440,220,3360,220C3280,220,3200,220,3120,220C3040,220,2960,220,2880,220C2800,220,2720,220,2640,220C2560,220,2480,220,2400,220C2320,220,2240,220,2160,220C2080,220,2000,220,1920,220C1840,220,1760,220,1680,220C1600,220,1520,220,1440,220C1360,220,1280,220,1200,220C1120,220,1040,220,960,220C880,220,800,220,720,220C640,220,560,220,480,220C400,220,320,220,240,220C160,220,80,220,40,220L0,220Z"></path>
+        <defs>
+            <linearGradient id="sw-gradient-1" x1="0" x2="0" y1="1" y2="0">
+                <stop stop-color="rgba(216, 180, 160, 1)" offset="0%"></stop>
+                <stop stop-color="rgba(216, 180, 160, 1)" offset="100%"></stop>
+            </linearGradient>
+        </defs>
+        <path style="transform:translate(0, 50px); opacity:0.9" fill="url(#sw-gradient-1)"
+              d="M0,88L40,102.7C80,117,160,147,240,157.7C320,169,400,161,480,150.3C560,139,640,125,720,102.7C800,81,880,51,960,33C1040,15,1120,7,1200,7.3C1280,7,1360,15,1440,25.7C1520,37,1600,51,1680,66C1760,81,1840,95,1920,117.3C2000,139,2080,169,2160,150.3C2240,132,2320,66,2400,51.3C2480,37,2560,73,2640,95.3C2720,117,2800,125,2880,128.3C2960,132,3040,132,3120,117.3C3200,103,3280,73,3360,80.7C3440,88,3520,132,3600,154C3680,176,3760,176,3840,179.7C3920,183,4000,191,4080,176C4160,161,4240,125,4320,117.3C4400,110,4480,132,4560,128.3C4640,125,4720,95,4800,88C4880,81,4960,95,5040,88C5120,81,5200,51,5280,47.7C5360,44,5440,66,5520,95.3C5600,125,5680,161,5720,179.7L5760,198L5760,220L5720,220C5680,220,5600,220,5520,220C5440,220,5360,220,5280,220C5200,220,5120,220,5040,220C4960,220,4880,220,4800,220C4720,220,4640,220,4560,220C4480,220,4400,220,4320,220C4240,220,4160,220,4080,220C4000,220,3920,220,3840,220C3760,220,3680,220,3600,220C3520,220,3440,220,3360,220C3280,220,3200,220,3120,220C3040,220,2960,220,2880,220C2800,220,2720,220,2640,220C2560,220,2480,220,2400,220C2320,220,2240,220,2160,220C2080,220,2000,220,1920,220C1840,220,1760,220,1680,220C1600,220,1520,220,1440,220C1360,220,1280,220,1200,220C1120,220,1040,220,960,220C880,220,800,220,720,220C640,220,560,220,480,220C400,220,320,220,240,220C160,220,80,220,40,220L0,220Z"></path>
+        <defs>
+            <linearGradient id="sw-gradient-2" x1="0" x2="0" y1="1" y2="0">
+                <stop stop-color="rgba(215, 122, 97, 1)" offset="0%"></stop>
+                <stop stop-color="rgba(215, 122, 97, 1)" offset="100%"></stop>
+            </linearGradient>
+        </defs>
+        <path style="transform:translate(0, 100px); opacity:0.8" fill="url(#sw-gradient-2)"
+              d="M0,44L40,62.3C80,81,160,117,240,110C320,103,400,51,480,44C560,37,640,73,720,80.7C800,88,880,66,960,77C1040,88,1120,132,1200,128.3C1280,125,1360,73,1440,51.3C1520,29,1600,37,1680,58.7C1760,81,1840,117,1920,139.3C2000,161,2080,169,2160,165C2240,161,2320,147,2400,124.7C2480,103,2560,73,2640,73.3C2720,73,2800,103,2880,110C2960,117,3040,103,3120,99C3200,95,3280,103,3360,117.3C3440,132,3520,154,3600,168.7C3680,183,3760,191,3840,194.3C3920,198,4000,198,4080,179.7C4160,161,4240,125,4320,102.7C4400,81,4480,73,4560,62.3C4640,51,4720,37,4800,51.3C4880,66,4960,110,5040,121C5120,132,5200,110,5280,102.7C5360,95,5440,103,5520,102.7C5600,103,5680,95,5720,91.7L5760,88L5760,220L5720,220C5680,220,5600,220,5520,220C5440,220,5360,220,5280,220C5200,220,5120,220,5040,220C4960,220,4880,220,4800,220C4720,220,4640,220,4560,220C4480,220,4400,220,4320,220C4240,220,4160,220,4080,220C4000,220,3920,220,3840,220C3760,220,3680,220,3600,220C3520,220,3440,220,3360,220C3280,220,3200,220,3120,220C3040,220,2960,220,2880,220C2800,220,2720,220,2640,220C2560,220,2480,220,2400,220C2320,220,2240,220,2160,220C2080,220,2000,220,1920,220C1840,220,1760,220,1680,220C1600,220,1520,220,1440,220C1360,220,1280,220,1200,220C1120,220,1040,220,960,220C880,220,800,220,720,220C640,220,560,220,480,220C400,220,320,220,240,220C160,220,80,220,40,220L0,220Z"></path>
+    </svg>
+</footer>
+{% block script %}{% endblock script %}o
+</body>
+</html>
